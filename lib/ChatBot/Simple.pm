@@ -47,10 +47,16 @@ sub transform {
 }
 
 sub match {
-  my ($str1,$str2) = @_;
-  # TODO: take variables into consideration
-  # example: "my name is foo" should match "my name is :name"
-  return lc($str1) eq lc($str2);
+  my ($str, $pattern) = @_;
+
+  # make ":var" match literal '\S+'
+  $pattern =~ s{:\S+}{'\S+'}ge;
+
+  if ($str =~ m/$pattern/) {
+    return 1;
+  }
+
+  return;
 }
 
 sub process_transform {
