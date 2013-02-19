@@ -9,7 +9,7 @@ require Exporter;
 
 our @ISA = qw/Exporter/;
 
-our @EXPORT = qw/pattern transform %mem/;
+our @EXPORT = qw/pattern respond transform %mem/;
 
 my %mem;
 
@@ -26,6 +26,9 @@ sub pattern {
     code   => $code,
   };
 }
+
+# "respond" is just an alias to "pattern"
+*respond = \&pattern;
 
 sub transform {
   my (@expr) = @_;
