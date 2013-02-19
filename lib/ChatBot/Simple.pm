@@ -93,3 +93,87 @@ sub transforms {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+ChatBot::Simple - new and flexible chatbot engine in Perl
+
+=head1 SYNOPSIS
+
+  use ChatBot::Simple;
+
+  respond 'hello' => 'hi!';
+
+  respond "what is your name" => "my name is ChatBot::Simple, and yours?";
+
+  respond "my name is :name" => "nice to meet you, :name";
+
+  transform "what's" => "what is";
+
+=head1 DESCRIPTION
+
+ChatBot::Simple is a new and flexible chatbot engine in Perl.
+
+Instead of specifying the chatbot knowledge base in xml, we are
+going to use the powerfult text manipulation capabilities of Perl.
+
+=head1 METHODS
+
+=head2 respond
+
+respond is used to register response patterns:
+
+  respond 'hello' => 'hi!';
+
+Multiple (successive) responses:
+
+  respond 'hello' => [ 'hi!', 'I already said hi!' ];
+
+=head2 transform
+
+transform is used to register text normalizations:
+
+  transform "what's" => "what is";
+  respond "what is your name" => "my name is ChatBot::Simple";
+
+=head2 process
+
+process will read a sentence, apply all the possible transforms and
+patterns, and return a response.
+
+=head1 TODO
+
+There are some powerful features that I'm planning, that will make
+ChatBot::Simple much more powerful than any engine I know of.
+
+Named variables:
+
+  respond "my name is :name" => "hello, :name!";
+
+Code execution:
+
+  my %mem;
+
+  respond "my name is :name" => sub {
+    # save name for later use
+    $mem{name} = param('name');
+  } => "nice to meet you, :name!";
+
+  respond "I am :age years old" => sub {
+    # save name for later use
+    $mem{age} = param('age');
+  } => "cool!";
+
+=head1 METHODS
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2013 Nelson Ferraz
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
