@@ -1,0 +1,84 @@
+ChatBot-Simple
+
+ChatBot::Simple is a tentative to create a new and flexible chatbot
+engine in Perl.
+
+Instead of specifying the chatbot knowledge base in xml, we are
+going to use the powerfult text manipulation capabilities of Perl.
+
+Simple example:
+
+	respond 'hello' => 'hi!';
+
+Multiple (successive) responses:
+
+	respond 'hello' => [ 'hi!', 'I already said hi!' ];
+
+Transforms:
+
+	transform "what's" => "what is";
+	respond "what is your name" => "my name is ChatBot::Simple";
+
+There are some powerful features that I'm planning, that will make
+ChatBot::Simple much more powerful than any engine I know of.
+
+Named variables:
+
+	respond "my name is :name" => "hello, :name!";
+
+Code execution:
+
+	my %mem;
+
+	respond "my name is :name" => sub {
+		# save name for later use
+		$mem{name} = param('name');
+	} => "nice to meet you, :name!";
+
+	respond "I am :age years old" => sub {
+		# save name for later use
+		$mem{age} = param('age');
+	} => "cool!";
+
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc ChatBot::Simple
+
+You can also look for information at:
+
+    RT, CPAN's request tracker (report bugs here)
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=ChatBot-Simple
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/ChatBot-Simple
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/ChatBot-Simple
+
+    Search CPAN
+        http://search.cpan.org/dist/ChatBot-Simple/
+
+
+LICENSE AND COPYRIGHT
+
+Copyright (C) 2013 Nelson Ferraz
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
