@@ -49,14 +49,26 @@ sub transform {
 sub match {
   my ($str, $pattern) = @_;
 
-  # make ":var" match literal '\S+'
-  $pattern =~ s{:\S+}{'\S+'}ge;
+  my @named_vars = $pattern =~ m{(:\S+)}g;
+
+  # make ":var" match '(\S+)'
+  $pattern =~ s{:\S+}{'(\S+)'}ge;
 
   if ($str =~ m/$pattern/) {
-    return 1;
+    return {
+      $named_vars[0] => $1,
+    };
   }
 
   return;
+}
+
+sub replace_vars {
+  my ($pattern, $named_vars) = @_;
+  for my $var (keys %$named_vars) {
+    $pattern =~ s{$var}{$named_vars->{$var}}g;
+  }
+  return $pattern;
 }
 
 sub process_transform {
@@ -76,12 +88,17 @@ sub process_pattern {
   my $str = shift;
 
   for my $pt (@patterns) {
-    next unless match($str, $pt->{input});
+    my $match = match($str, $pt->{input});
+    return if !$match;
     warn "Pattern code not implemented\n" if $pt->{code};
     my $response = $pt->{output}->[0]; # TODO: deal with multiple possible responses
-    return $response;
+
+    my $response_interpolated = replace_vars($response, $match);
+
+    return $response_interpolated;
   }
 
+  warn "Couldn't find a match for '$str'";
   return;
 }
 
