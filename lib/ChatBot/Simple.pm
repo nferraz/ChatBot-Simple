@@ -55,9 +55,13 @@ sub match {
   $pattern =~ s{:\S+}{'(\S+)'}ge;
 
   if ($str =~ m/$pattern/) {
-    return {
-      $named_vars[0] => $1,
-    };
+    if ($1) {
+      return {
+        (defined $1 ? ($named_vars[0] => $1) : undef),
+      };
+    } else {
+      return {}; # true, but no variables to replace
+    }
   }
 
   return;
@@ -66,6 +70,7 @@ sub match {
 sub replace_vars {
   my ($pattern, $named_vars) = @_;
   for my $var (keys %$named_vars) {
+    next if $var eq '';
     $pattern =~ s{$var}{$named_vars->{$var}}g;
   }
   return $pattern;
@@ -90,8 +95,14 @@ sub process_pattern {
   for my $pt (@patterns) {
     my $match = match($str, $pt->{input});
     return if !$match;
-    warn "Pattern code not implemented\n" if $pt->{code};
-    my $response = $pt->{output}->[0]; # TODO: deal with multiple possible responses
+
+    my $response;
+
+    if ($pt->{code} and ref $pt->{code} eq 'CODE') {
+      $response = $pt->{code}();
+    }
+
+    $response //= $pt->{output}->[0]; # TODO: deal with multiple possible responses
 
     my $response_interpolated = replace_vars($response, $match);
 
