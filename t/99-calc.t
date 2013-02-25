@@ -32,12 +32,10 @@ my @tests = (
 
 transform "what's" => "what is";
 
-pattern "what is :num1 :op :num2?" => sub {
+pattern "what is :num1 :op :num2" => sub {
     my ($str,$param) = @_;
 
-    die Dumper $param;
-
-    my ($num1,$op,$num2) = ($param->{num1}, $param->{op}, $param->{num2});
+    my ($num1,$op,$num2) = ($param->{':num1'}, $param->{':op'}, $param->{':num2'});
 
     if ($num1 =~ /\D/ or $num2 =~ /\D/) {
         return "I don't know how to calculate that";
