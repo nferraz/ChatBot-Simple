@@ -23,6 +23,18 @@ my @tests = (
     expect => "I don't know how to calculate that",
   },
   {
+    input => 'define foo as 2',
+    expect => 'ok',
+  },
+  {
+    input => 'define bar as 2',
+    expect => 'ok',
+  },
+  {
+    input => "what's foo + bar",
+    expect => "4",
+  },
+  {
     input => "what's 2 # 2",
     expect => "I don't know how to calculate that",
   },
@@ -32,13 +44,29 @@ my @tests = (
 
 transform "what's" => "what is";
 
+my %var;
+
+pattern "define :variable as :value" => sub {
+  my ($str,$param) = @_;
+
+  my ($variable,$value) = ($param->{':variable'}, $param->{':value'});
+  $var{$variable} = $value;
+
+  return;
+} => "ok";
+
 pattern "what is :num1 :op :num2" => sub {
     my ($str,$param) = @_;
 
     my ($num1,$op,$num2) = ($param->{':num1'}, $param->{':op'}, $param->{':num2'});
 
     if ($num1 =~ /\D/ or $num2 =~ /\D/) {
-        return "I don't know how to calculate that";
+        if ($var{$num1} and $var{$num2}) {
+          $num1 = $var{$num1};
+          $num2 = $var{$num2};
+        } else {
+          return "I don't know how to calculate that";
+        }
     }
 
     return $op eq '+' ? $num1 + $num2
