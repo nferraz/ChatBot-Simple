@@ -55,9 +55,9 @@ sub match {
 
   if ($str =~ m/$pattern/) {
     if ($1) {
-      return {
-        (defined $1 ? ($named_vars[0] => $1) : undef),
-      };
+      my @match = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
+      my %result = map { $_ => shift @match } @named_vars;
+      return \%result;
     } else {
       return {}; # true, but no variables to replace
     }
