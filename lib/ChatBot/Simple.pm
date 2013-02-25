@@ -78,8 +78,11 @@ sub process_transform {
 
   for my $tr (@transforms) {
     next unless match($str, $tr->{input});
-    warn "Transform code not implemented\n" if $tr->{code};
-    return process_transform( $tr->{output} );
+    if (ref $tr->{code} eq 'CODE') {
+      warn "Transform code not implemented\n";
+    }
+    #warn sprintf("Replace '%s' with '%s' in '%s'\n", $tr->{input}, $tr->{output}, $str);
+    $str =~ s/$tr->{input}/$tr->{output}/g;
   }
 
   # No transformations found...
@@ -91,12 +94,12 @@ sub process_pattern {
 
   for my $pt (@patterns) {
     my $match = match($str, $pt->{input});
-    return if !$match;
+    next if !$match;
 
     my $response;
 
     if ($pt->{code} and ref $pt->{code} eq 'CODE') {
-      $response = $pt->{code}();
+      $response = $pt->{code}($str,$match);
     }
 
     $response //= $pt->{output}->[0]; # TODO: deal with multiple possible responses
