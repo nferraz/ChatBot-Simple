@@ -108,7 +108,7 @@ sub process_pattern {
 
     if (ref $response eq 'ARRAY') {
       # deal with multiple responses
-      $response = $response->[0];
+      $response = $response->[ rand(scalar(@$response)) ];
     }
 
     my $response_interpolated = replace_vars($response, $match);
@@ -171,9 +171,9 @@ pattern is used to register response patterns:
 
   pattern 'hello' => 'hi!';
 
-Multiple (successive) responses:
+Multiple (random) responses:
 
-  pattern 'hello' => [ 'hi!', 'I already said hi!' ];
+  pattern 'hello' => [ 'hi!', 'hello!', 'what\'s up?' ];
 
 =head2 transform
 
