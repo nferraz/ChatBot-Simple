@@ -122,7 +122,6 @@ sub process_pattern {
 
 sub process {
   my $str = shift;
-  $DB::single=1;
   my $tr  = process_transform($str);
   my $res = process_pattern($tr);
   return $res;
