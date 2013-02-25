@@ -194,14 +194,16 @@ Code execution:
   my %mem;
 
   pattern "my name is :name" => sub {
-    # save name for later use
-    $mem{name} = param('name');
+    my ($str,$param) = @_;
+    $mem{name} = $param->{name};
   } => "nice to meet you, :name!";
 
-  pattern "I am :age years old" => sub {
-    # save name for later use
-    $mem{age} = param('age');
-  } => "cool!";
+  pattern "what is my name?" => sub {
+    return $mem{name} ? "Your name is $mem{name}"
+                      : "I don't know!";
+  };
+
+(See more examples in the C<t/> directory)
 
 =head1 METHODS
 
