@@ -7,34 +7,34 @@ going to use the powerfult text manipulation capabilities of Perl.
 
 Simple example:
 
-	respond 'hello' => 'hi!';
+	pattern 'hello' => 'hi!';
 
 Multiple (successive) responses:
 
-	respond 'hello' => [ 'hi!', 'I already said hi!' ];
+	pattern 'hello' => [ 'hi!', 'I already said hi!' ];
 
 Transforms:
 
 	transform "what's" => "what is";
-	respond "what is your name" => "my name is ChatBot::Simple";
+	pattern "what is your name" => "my name is ChatBot::Simple";
 
 There are some powerful features that I'm planning, that will make
 ChatBot::Simple much more powerful than any engine I know of.
 
 Named variables:
 
-	respond "my name is :name" => "hello, :name!";
+	pattern "my name is :name" => "hello, :name!";
 
 Code execution:
 
 	my %mem;
 
-	respond "my name is :name" => sub {
+	pattern "my name is :name" => sub {
 		# save name for later use
 		$mem{name} = param('name');
 	} => "nice to meet you, :name!";
 
-	respond "I am :age years old" => sub {
+	pattern "I am :age years old" => sub {
 		# save name for later use
 		$mem{age} = param('age');
 	} => "cool!";

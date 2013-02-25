@@ -9,7 +9,7 @@ require Exporter;
 
 our @ISA = qw/Exporter/;
 
-our @EXPORT = qw/pattern respond transform %mem/;
+our @EXPORT = qw/pattern transform %mem/;
 
 my %mem;
 
@@ -26,9 +26,6 @@ sub pattern {
     code   => $code,
   };
 }
-
-# "respond" is just an alias to "pattern"
-*respond = \&pattern;
 
 sub transform {
   my (@expr) = @_;
@@ -141,11 +138,11 @@ ChatBot::Simple - new and flexible chatbot engine in Perl
 
   use ChatBot::Simple;
 
-  respond 'hello' => 'hi!';
+  pattern 'hello' => 'hi!';
 
-  respond "what is your name" => "my name is ChatBot::Simple, and yours?";
+  pattern "what is your name" => "my name is ChatBot::Simple, and yours?";
 
-  respond "my name is :name" => "nice to meet you, :name";
+  pattern "my name is :name" => "nice to meet you, :name";
 
   transform "what's" => "what is";
 
@@ -158,22 +155,22 @@ going to use the powerfult text manipulation capabilities of Perl.
 
 =head1 METHODS
 
-=head2 respond
+=head2 pattern
 
-respond is used to register response patterns:
+pattern is used to register response patterns:
 
-  respond 'hello' => 'hi!';
+  pattern 'hello' => 'hi!';
 
 Multiple (successive) responses:
 
-  respond 'hello' => [ 'hi!', 'I already said hi!' ];
+  pattern 'hello' => [ 'hi!', 'I already said hi!' ];
 
 =head2 transform
 
 transform is used to register text normalizations:
 
   transform "what's" => "what is";
-  respond "what is your name" => "my name is ChatBot::Simple";
+  pattern "what is your name" => "my name is ChatBot::Simple";
 
 =head2 process
 
@@ -187,18 +184,18 @@ ChatBot::Simple much more powerful than any engine I know of.
 
 Named variables:
 
-  respond "my name is :name" => "hello, :name!";
+  pattern "my name is :name" => "hello, :name!";
 
 Code execution:
 
   my %mem;
 
-  respond "my name is :name" => sub {
+  pattern "my name is :name" => sub {
     # save name for later use
     $mem{name} = param('name');
   } => "nice to meet you, :name!";
 
-  respond "I am :age years old" => sub {
+  pattern "I am :age years old" => sub {
     # save name for later use
     $mem{age} = param('age');
   } => "cool!";
