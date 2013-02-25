@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use ChatBot::Simple;
 
-plan tests => 2;
+plan tests => 3;
 
 pattern 'hi' => [ 'hi!', 'hello!', 'howdy?' ];
 
