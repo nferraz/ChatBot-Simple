@@ -11,7 +11,9 @@ use ChatBot::Simple;
 
 plan tests => 2;
 
-pattern 'hi' => [ 'hi!', 'I said hi!' ];
+pattern 'hi' => [ 'hi!', 'hello!', 'howdy?' ];
+
+srand(1);
 
 {
   my $response = ChatBot::Simple::process_pattern('hi');
@@ -20,5 +22,10 @@ pattern 'hi' => [ 'hi!', 'I said hi!' ];
 
 {
   my $response = ChatBot::Simple::process_pattern('hi');
-  is($response, 'I said hi!');
+  is($response, 'hello!');
+}
+
+{
+  my $response = ChatBot::Simple::process_pattern('hi');
+  is($response, 'howdy?');
 }
