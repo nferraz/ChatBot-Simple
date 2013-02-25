@@ -21,7 +21,7 @@ Transforms:
 There are some powerful features that I'm planning, that will make
 ChatBot::Simple much more powerful than any engine I know of.
 
-Named variables:
+Named parameters:
 
 	pattern "my name is :name" => "hello, :name!";
 
@@ -38,6 +38,21 @@ Code execution:
 		return $mem{name} ? "Your name is $mem{name}"
 		                  : "I don't know!";
 	};
+
+Multiple named parameters:
+
+	my %var;
+
+	pattern "define :variable as :value" => sub {
+		my ($str,$param);
+
+		my $variable = $param->{':variable'};
+		my $value    = $param->{':value'};
+
+		$var{$variable} = $value;
+
+		return;
+	} => 'ok';
 
 (See more examples in the "t/" directory.)
 
