@@ -32,7 +32,7 @@ my @patterns = ChatBot::Simple::patterns();
 my @expected = [
     {
         'input'  => 'what is your name',
-        'output' => [ 'my name is chatbot' ],
+        'output' => 'my name is chatbot',
         'code'   => undef
     }
 ];
