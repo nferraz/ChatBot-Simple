@@ -20,9 +20,11 @@ sub pattern {
 
   my $code = ref $rest[0] eq 'CODE' ? shift @rest : undef;
 
+  my $output = shift @rest;
+
   push @patterns, {
     input  => $input,
-    output => [ @rest ],
+    output => $output,
     code   => $code,
   };
 }
@@ -102,7 +104,12 @@ sub process_pattern {
       $response = $pt->{code}($str,$match);
     }
 
-    $response //= $pt->{output}->[0]; # TODO: deal with multiple possible responses
+    $response //= $pt->{output};
+
+    if (ref $response eq 'ARRAY') {
+      # deal with multiple responses
+      $response = $response->[0];
+    }
 
     my $response_interpolated = replace_vars($response, $match);
 
