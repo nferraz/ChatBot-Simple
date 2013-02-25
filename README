@@ -9,9 +9,9 @@ Simple example:
 
 	pattern 'hello' => 'hi!';
 
-Multiple (successive) responses:
+Multiple (random) responses:
 
-	pattern 'hello' => [ 'hi!', 'I already said hi!' ];
+	pattern 'hello' => [ 'hi!', 'hello!', 'wazzzzup!' ];
 
 Transforms:
 
