@@ -172,7 +172,7 @@ ChatBot::Simple - new and flexible chatbot engine in Perl
 ChatBot::Simple is a new and flexible chatbot engine in Perl.
 
 Instead of specifying the chatbot knowledge base in xml, we are
-going to use the powerfult text manipulation capabilities of Perl.
+going to use the powerful text manipulation capabilities of Perl.
 
 =head1 METHODS
 
