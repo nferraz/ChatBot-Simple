@@ -182,10 +182,6 @@ pattern is used to register response patterns:
 
   pattern 'hello' => 'hi!';
 
-Multiple (random) responses:
-
-  pattern 'hello' => [ 'hi!', 'hello!', 'what\'s up?' ];
-
 =head2 transform
 
 transform is used to register text normalizations:
@@ -198,16 +194,17 @@ transform is used to register text normalizations:
 process will read a sentence, apply all the possible transforms and
 patterns, and return a response.
 
-=head1 TODO
+=head1 FEATURES
 
-There are some powerful features that I'm planning, that will make
-ChatBot::Simple much more powerful than any engine I know of.
+=head2 Multiple (random) responses:
 
-Named variables:
+  pattern 'hello' => [ 'hi!', 'hello!', 'what\'s up?' ];
+
+=head2 Named variables
 
   pattern "my name is :name" => "hello, :name!";
 
-Code execution:
+=head2 Code execution
 
   my %mem;
 
@@ -219,6 +216,15 @@ Code execution:
   pattern "what is my name?" => sub {
     return $mem{name} ? "Your name is $mem{name}"
                       : "I don't know!";
+  };
+
+=head2 Regular expressions
+
+  pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
+    my ($str,$param) = @_;
+    my ($n1,$op,$n2) = ($param->{1}, $param->{2}, $param->{3});
+    # ...
+    return $result;
   };
 
 (See more examples in the C<t/> directory)

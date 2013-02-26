@@ -18,9 +18,6 @@ Transforms:
 	transform "what's" => "what is";
 	pattern "what is your name" => "my name is ChatBot::Simple";
 
-There are some powerful features that I'm planning, that will make
-ChatBot::Simple much more powerful than any engine I know of.
-
 Named parameters:
 
 	pattern "my name is :name" => "hello, :name!";
@@ -53,6 +50,15 @@ Multiple named parameters:
 
 		return;
 	} => 'ok';
+
+Regular expressions:
+
+	pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
+		my ($str,$param) = @_;
+		my ($n1,$op,$n2) = ($param->{1}, $param->{2}, $param->{3});
+		# ...
+		return $result;
+	};
 
 (See more examples in the "t/" directory.)
 
