@@ -29,7 +29,6 @@ my @tests = (
     input => 'my name is foo bar',
     pattern => 'my name is :first_name :last_name',
     expect => { ':first_name' => 'foo', ':last_name' => 'bar' },
-    DEBUG => 1,
   }
 );
 
@@ -40,7 +39,6 @@ for my $test (@tests) {
   my $pattern = $test->{pattern};
   my $expect  = $test->{expect};
 
-  if ($test->{DEBUG}) { $DB::single = 1; }
   my $output = ChatBot::Simple::match($input,$pattern);
 
   cmp_deeply($output,$expect,"'$input' ~ '$pattern'");
