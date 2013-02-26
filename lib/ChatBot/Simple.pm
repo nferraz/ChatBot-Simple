@@ -70,13 +70,9 @@ sub match {
 
   # do the pattern matching
   if ($str =~ m/$pattern/) {
-    if ($1) {
-      my @match = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
-      my %result = map { $_ => shift @match } @named_vars;
-      return \%result;
-    } else {
-      return {}; # true, but no variables to replace
-    }
+    my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
+    my %result = map { $_ => shift @matches } @named_vars;
+    return \%result;
   }
 
   return;
