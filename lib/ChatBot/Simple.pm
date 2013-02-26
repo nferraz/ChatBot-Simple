@@ -48,11 +48,27 @@ sub transform {
 sub match {
   my ($str, $pattern) = @_;
 
+  # regex match
+  if (ref $pattern eq 'Regexp') {
+    if ($str =~ $pattern) {
+      my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
+      my $i = 0;
+      my %result = map { ++$i => $_ } grep { defined $_ } @matches;
+      return \%result;
+    } else {
+      return;
+    }
+  }
+
+  # text pattern (like "my name is :name")
+
+  # first, extract the named variables
   my @named_vars = $pattern =~ m{(:\S+)}g;
 
-  # make ":var" match '(\S+)'
+  # transform named variables to '(\S+)'
   $pattern =~ s{:\S+}{'(\S+)'}ge;
 
+  # do the pattern matching
   if ($str =~ m/$pattern/) {
     if ($1) {
       my @match = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
