@@ -29,7 +29,18 @@ my @tests = (
     input => 'my name is foo bar',
     pattern => 'my name is :first_name :last_name',
     expect => { ':first_name' => 'foo', ':last_name' => 'bar' },
-  }
+  },
+  {
+    input   => 'my name is foo bar',
+    pattern => 'my name is *',
+    expect  => { '*' => 'foo bar' },
+  },
+  {
+    input   => 'my real name is foo',
+    pattern => 'my * is :value',
+    expect  => { '*' => 'real name', ':value' => 'foo' },
+  },
+
 );
 
 plan tests => scalar @tests;
