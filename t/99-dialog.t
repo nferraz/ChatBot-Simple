@@ -54,7 +54,7 @@ pattern "my name is :name" => sub {
 pattern "what is my name" => sub {
   my ($str,$param) = @_;
   return $mem{name} ? "your name is $mem{name}" : "I don't know";
-} => "x";
+};
 
 plan tests => scalar @tests;
 
