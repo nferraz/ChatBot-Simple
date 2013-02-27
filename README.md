@@ -1,35 +1,43 @@
-= NAME =
+NAME
+====
 
 ChatBot-Simple - a new and flexible chatbot engine in Perl.
 
-= DESCRIPTION =
+DESCRIPTION
+===========
 
 Instead of specifying the chatbot knowledge base in xml, we are
 going to use the powerful text manipulation capabilities of Perl.
 
-= FEATURES =
+FEATURES
+========
 
-== Simple pattern/responses ==
+Simple pattern/responses
+------------------------
 
 	pattern 'hello' => 'hi!';
 
-== Multiple (random) responses ==
+Multiple (random) responses
+---------------------------
 
 	pattern 'hello' => [ 'hi!', 'hello!', 'wazzzzup!' ];
 
-== Transformations ==
+Transformations
+---------------
 
-Transformations are performed before the pattern matching:
+(Transformations are performed before the pattern matching)
 
 	transform "I'm"    => "I am"
 	transform "you're" => "you are";
 	transform "what's" => "what is";
 
-== Named parameters ==
+Named parameters
+----------------
 
 	pattern "my name is :name" => "hello, :name!";
 
-== Code execution ==
+Code execution
+--------------
 
 	my %mem;
 
@@ -43,7 +51,8 @@ Transformations are performed before the pattern matching:
 		                  : "I don't know!";
 	};
 
-== Multiple named parameters ==
+Multiple named parameters
+-------------------------
 
 	my %var;
 
@@ -58,7 +67,8 @@ Transformations are performed before the pattern matching:
 		return;
 	} => 'ok';
 
-== Regular expressions ==
+Regular expressions
+-------------------
 
 	pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
 		my ($str,$param) = @_;
@@ -69,7 +79,8 @@ Transformations are performed before the pattern matching:
 
 (See more examples in the "t/" directory.)
 
-= INSTALLATION =
+INSTALLATION
+============
 
 To install this module, run the following commands:
 
@@ -78,7 +89,8 @@ To install this module, run the following commands:
 	make test
 	make install
 
-= SUPPORT AND DOCUMENTATION =
+SUPPORT AND DOCUMENTATION
+=========================
 
 After installing, you can find documentation for this module with the
 perldoc command.
@@ -99,7 +111,8 @@ You can also look for information at:
     Search CPAN
         http://search.cpan.org/dist/ChatBot-Simple/
 
-= LICENSE AND COPYRIGHT =
+LICENSE AND COPYRIGHT
+=====================
 
 Copyright (C) 2013 Nelson Ferraz
 
