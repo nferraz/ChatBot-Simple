@@ -3,12 +3,22 @@ ignore.txt
 lib/ChatBot/Simple.pm
 Makefile.PL
 MANIFEST			This list of files
-README
+README.md
 t/00-load.t
 t/01-basic.t
 t/02-transforms.t
 t/03-patterns.t
-t/boilerplate.t
+t/04-default-response-multiple.t
+t/04-default-response.t
+t/04-match-regexp.t
+t/04-match.t
+t/04-named-parameter-substitution-multiple.t
+t/04-named-parameter-substitution.t
+t/04-named-parameter.t
+t/05-code-execution-count.t
+t/05-code-execution.t
+t/99-calc.t
+t/99-name.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
