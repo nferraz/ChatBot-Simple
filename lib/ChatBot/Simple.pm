@@ -14,16 +14,16 @@ our @EXPORT = qw/pattern transform/;
 my (@patterns, @transforms);
 
 sub pattern {
-  my ($input, @rest) = @_;
+  my ($pattern, @rest) = @_;
 
   my $code = ref $rest[0] eq 'CODE' ? shift @rest : undef;
 
-  my $output = shift @rest;
+  my $response = shift @rest;
 
   push @patterns, {
-    input  => $input,
-    output => $output,
-    code   => $code,
+    pattern  => $pattern,
+    response => $response,
+    code     => $code,
   };
 }
 
@@ -36,9 +36,9 @@ sub transform {
 
   for my $exp (@expr) {
     push @transforms, {
-      input  => $exp,
-      output => $transform_to,
-      code   => $code,
+      pattern   => $exp,
+      transform => $transform_to,
+      code      => $code,
     };
   }
 }
@@ -94,16 +94,16 @@ sub process_transform {
   my $str = shift;
 
   for my $tr (@transforms) {
-    next unless match($str, $tr->{input});
+    next unless match($str, $tr->{pattern});
     if (ref $tr->{code} eq 'CODE') {
       warn "Transform code not implemented\n";
     }
     #warn sprintf("Replace '%s' with '%s' in '%s'\n", $tr->{input}, $tr->{output}, $str);
-    my $input = $tr->{input};
+    my $input = $tr->{pattern};
     my $vars = match($str,$input);
     if ($vars) {
-      my $input = replace_vars($tr->{input},$vars);
-      $str =~ s/$input/$tr->{output}/g;
+      my $input = replace_vars($tr->{pattern},$vars);
+      $str =~ s/$input/$tr->{transform}/g;
       $str = replace_vars($str,$vars);
     }
   }
@@ -116,7 +116,7 @@ sub process_pattern {
   my $input = shift;
 
   for my $pt (@patterns) {
-    my $match = match($input, $pt->{input});
+    my $match = match($input, $pt->{pattern});
     next if !$match;
 
     my $response;
@@ -125,7 +125,7 @@ sub process_pattern {
       $response = $pt->{code}($input,$match);
     }
 
-    $response //= $pt->{output};
+    $response //= $pt->{response};
 
     if (ref $response eq 'ARRAY') {
       # deal with multiple responses
