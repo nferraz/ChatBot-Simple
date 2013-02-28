@@ -46,11 +46,6 @@ Code execution
 		$mem{name} = $param->':name';
 	} => "nice to meet you, :name!";
 
-	pattern "what is my name?" => sub {
-		return $mem{name} ? "Your name is $mem{name}"
-		                  : "I don't know!";
-	};
-
 Multiple named parameters
 -------------------------
 

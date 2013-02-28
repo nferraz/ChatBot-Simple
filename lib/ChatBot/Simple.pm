@@ -222,11 +222,6 @@ patterns, and return a response.
     $mem{name} = $param->{name};
   } => "nice to meet you, :name!";
 
-  pattern "what is my name?" => sub {
-    return $mem{name} ? "Your name is $mem{name}"
-                      : "I don't know!";
-  };
-
 =head2 Regular expressions
 
   pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
