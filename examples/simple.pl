@@ -6,7 +6,7 @@ use warnings;
 # this example shows how to organize data in a separate package
 # and how to set topics, memorize stuff, etc.
 
-package Foo;
+package SmallTalk;
 
 use ChatBot::Simple;
 
@@ -48,6 +48,39 @@ pattern qr{^(\w+)$} => sub {
   return;
 } => "I don't understand that!";
 
+
+package Calculator;
+
+use ChatBot::Simple;
+
+no warnings 'uninitialized';
+
+pattern qr{(\d+)\s*([\+\-\*\/])\s*(\d+)} => sub {
+  my ($input,$param) = @_;
+  my ($n1,$op,$n2) = ($param->{1},$param->{2},$param->{3});
+
+  my $result = 
+        $op eq '+' ? $n1 + $n2
+      : $op eq '-' ? $n1 - $n2
+      : $op eq '*' ? $n1 * $n2
+      : $op eq '/' ? $n1 / $n2
+                   : "I don't know how to calculate that!";
+
+  # problem: if we type "1 + 1", the result will be "+"
+  # which is the second parameter ($param->{2}) in the regexp.
+  #
+  # we'll probably have to use a prefix like ':1', ':2', ':3'
+  # to avoid confusion.
+  #
+  # that's also a good reason to keep the ':' before named parameters,
+  # so we don't replace words that happen to coincide with parameter
+  # names.
+  #
+  # alternatively, we could create accessors (param('var') returns
+  # $param->{':var'}, and so on
+
+  return "$n1 $op $n2 = $result";
+};
 
 ##### MAIN LOOP ######
 
