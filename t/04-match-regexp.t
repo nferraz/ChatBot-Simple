@@ -18,12 +18,12 @@ my @tests = (
   {
     input => 'my name is foo',
     pattern => qr/my name is (\w+)/,
-    expect => { '1' => 'foo' },
+    expect => { ':1' => 'foo' },
   },
   {
     input => 'my name is foo bar',
     pattern => qr/my name is (\w+) (\w+)/,
-    expect => { '1' => 'foo', '2' => 'bar' },
+    expect => { ':1' => 'foo', ':2' => 'bar' },
   },
   {
     input => 'foo',
