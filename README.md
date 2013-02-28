@@ -10,12 +10,11 @@ Instead of specifying the chatbot knowledge base in xml, we are
 going to use the powerful text manipulation capabilities of Perl.
 
 The rationale behind this decision is that "simple" AI languages,
-like AIML, are only simple as long as you want to do simple things.
-Once you start adding features, they start to become unmanageable.
+like AIML, are only simple if you want to do simple things. Once
+you start adding features, they quickly become unmanageable.
 
-ChatBot::Simple design goal is to make easy things easy and difficult
-things possible.
-
+ChatBot::Simple's design goal is to make easy things easy, and
+difficult things possible.
 
 FEATURES
 ========
