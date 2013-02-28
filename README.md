@@ -9,6 +9,14 @@ DESCRIPTION
 Instead of specifying the chatbot knowledge base in xml, we are
 going to use the powerful text manipulation capabilities of Perl.
 
+The rationale behind this decision is simple: "simple" AI languages,
+like AIML, are only simple as long as you want to do simple things.
+Once you start adding features, they start to become unmanageable.
+
+ChatBot::Simple design goal is to make easy things easy and difficult
+things possible.
+
+
 FEATURES
 ========
 
@@ -21,15 +29,6 @@ Multiple (random) responses
 ---------------------------
 
 	pattern 'hello' => [ 'hi!', 'hello!', 'wazzzzup!' ];
-
-Transformations
----------------
-
-(Transformations are performed before the pattern matching)
-
-	transform "I'm"    => "I am"
-	transform "you're" => "you are";
-	transform "what's" => "what is";
 
 Named parameters
 ----------------
@@ -71,6 +70,20 @@ Regular expressions
 		# ...
 		return $result;
 	};
+
+Transformations
+---------------
+
+Transformations can be used to normalize input, and are performed
+before the pattern matching:
+
+	transform "I'm"    => "I am"
+	transform "you're" => "you are";
+	transform "what's" => "what is";
+
+They can use parameters as well:
+
+	transform "I am called :name" => "my name is :name";
 
 (See more examples in the "t/" directory.)
 
