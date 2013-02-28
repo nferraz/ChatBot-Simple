@@ -11,26 +11,26 @@ use ChatBot::Simple;
 
 my @test = (
     {
-        input  => 'hello',
-        output => 'hi',
+        pattern  => 'hello',
+        transform => 'hi',
     },
 );
 
 plan tests => scalar @test + 1;
 
 for my $test (@test) {
-    my $input  = $test->{input};
-    my $output = $test->{output};
+    my $pattern  = $test->{pattern};
+    my $transform = $test->{transform};
 
-    transform $input => $output;
+    transform $pattern => $transform;
 }
 
 my @transforms = ChatBot::Simple::transforms();
 
 my @expected = [
     {
-        'input'  => 'hello',
-        'output' => 'hi',
+        'pattern'  => 'hello',
+        'transform' => 'hi',
         'code'   => undef
     }
 ];
@@ -38,10 +38,10 @@ my @expected = [
 cmp_deeply( \@transforms, \@expected ) or warn Dumper(@transforms);
 
 for my $test (@test) {
-    my $input  = $test->{input};
-    my $expected = $test->{output};
+    my $pattern  = $test->{pattern};
+    my $expected = $test->{transform};
 
-    my $output = ChatBot::Simple::process_transform($input);
+    my $transform = ChatBot::Simple::process_transform($pattern);
 
-    is($output,$expected);
+    is($transform,$expected);
 }
