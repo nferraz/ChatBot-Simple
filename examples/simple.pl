@@ -6,7 +6,7 @@ use warnings;
 # this example shows how to organize data in a separate package
 # and how to set topics, memorize stuff, etc.
 
-package SmallTalk;
+package Example;
 
 use ChatBot::Simple;
 
@@ -59,14 +59,12 @@ pattern qr{(\d+)\s*([\+\-\*\/])\s*(\d+)} => sub {
   my ($input,$param) = @_;
   my ($n1,$op,$n2) = ($param->{':1'},$param->{':2'},$param->{':3'});
 
-  my $result = 
+  return
         $op eq '+' ? $n1 + $n2
       : $op eq '-' ? $n1 - $n2
       : $op eq '*' ? $n1 * $n2
       : $op eq '/' ? $n1 / $n2
                    : "I don't know how to calculate that!";
-
-  return "$n1 $op $n2 = $result";
 };
 
 ##### MAIN LOOP ######
