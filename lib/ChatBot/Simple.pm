@@ -69,7 +69,7 @@ sub match {
   $pattern =~ s{\*}{'(.*)'}ge;
 
   # transform named variables to '(\S+)'
-  $pattern =~ s{:\S+}{'(\S+)'}ge;
+  $pattern =~ s{:\S+}{'(.*)'}ge;
 
 
   # do the pattern matching

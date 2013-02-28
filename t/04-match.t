@@ -31,6 +31,11 @@ my @tests = (
     expect => { ':first_name' => 'foo', ':last_name' => 'bar' },
   },
   {
+    input => 'my name is foo bar',
+    pattern => 'my name is :name',
+    expect => { ':name' => 'foo bar' },
+  },
+  {
     input   => 'my name is foo bar',
     pattern => 'my name is *',
     expect  => { '*' => 'foo bar' },
