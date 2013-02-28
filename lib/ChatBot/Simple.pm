@@ -9,9 +9,7 @@ require Exporter;
 
 our @ISA = qw/Exporter/;
 
-our @EXPORT = qw/pattern transform %mem/;
-
-my %mem;
+our @EXPORT = qw/pattern transform/;
 
 my (@patterns, @transforms);
 
