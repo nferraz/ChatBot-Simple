@@ -63,14 +63,10 @@ sub match {
   # text pattern (like "my name is :name")
 
   # first, extract the named variables
-  my @named_vars = $pattern =~ m{(:\S+|\*)}g;
-
-  # transform * to '(.*)'
-  $pattern =~ s{\*}{'(.*)'}ge;
+  my @named_vars = $pattern =~ m{(:\S+)}g;
 
   # transform named variables to '(\S+)'
   $pattern =~ s{:\S+}{'(.*)'}ge;
-
 
   # do the pattern matching
   if ($str =~ m/$pattern/) {
