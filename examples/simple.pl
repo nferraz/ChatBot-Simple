@@ -4,12 +4,11 @@ use strict;
 use warnings;
 
 # this example shows how to organize data in a separate package
-# and how to set topics, variables, etc.
+# and how to set topics, memorize stuff, etc.
 
 package Foo;
 
 use ChatBot::Simple;
-
 
 no warnings 'uninitialized';
 
