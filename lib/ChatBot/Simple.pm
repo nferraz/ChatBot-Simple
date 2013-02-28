@@ -86,7 +86,12 @@ sub replace_vars {
   my ($pattern, $named_vars) = @_;
   for my $var (keys %$named_vars) {
     next if $var eq '';
-    $pattern =~ s{$var}{$named_vars->{$var}}g;
+
+    # escape regex characters
+    my $quoted_var = $var;
+    $quoted_var =~ s{([\.\*\+])}{\\$1}g;
+
+    $pattern =~ s{$quoted_var}{$named_vars->{$var}}g;
   }
   return $pattern;
 }
