@@ -168,13 +168,18 @@ ChatBot::Simple - new and flexible chatbot engine in Perl
 
   use ChatBot::Simple;
 
+  # simple pattern/response
   pattern 'hello' => 'hi!';
+  pattern "what is your name?" => "my name is ChatBot::Simple";
 
-  pattern "what is your name" => "my name is ChatBot::Simple, and yours?";
-
-  pattern "my name is :name" => "nice to meet you, :name";
-
+  # simple transformations
   transform "what's" => "what is";
+
+  # simple responses
+  process("hello");
+  process("what's your name?");
+
+  # and much more!
 
 =head1 DESCRIPTION
 
@@ -196,7 +201,19 @@ pattern is used to register response patterns:
 transform is used to register text normalizations:
 
   transform "what's" => "what is";
-  pattern "what is your name" => "my name is ChatBot::Simple";
+
+Like C<pattern>, you can use named variables and code:
+
+  transform "I am called :name" => "my name is :name";
+
+  transform "foo" => sub {
+    # ...
+  } => "bar";
+
+Differently from C<pattern>, you can specify multiple transformations
+at once:
+
+  transform "goodbye", "byebye", "hasta la vista", "sayonara" => "bye";
 
 =head2 process
 
