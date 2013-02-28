@@ -23,7 +23,7 @@ my @tests = (
     expect => "your name is foo",
   },
   {
-    input => "my name is bar",
+    input => "I'm called bar",
     expect => "I thought your name was foo",
   },
   {
@@ -37,6 +37,10 @@ my @tests = (
 my %mem;
 
 transform "what's" => "what is";
+
+transform "I'm" => "I am";
+
+transform "I am called :name" => "my name is :name";
 
 pattern "my name is :name" => sub {
   my ($str,$param) = @_;
