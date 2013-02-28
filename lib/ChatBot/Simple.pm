@@ -51,7 +51,7 @@ sub match {
     if ($input =~ $pattern) {
       my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
       my $i = 0;
-      my %result = map { ++$i => $_ } grep { defined $_ } @matches;
+      my %result = map { ':' . ++$i => $_ } grep { defined $_ } @matches;
       return \%result;
     } else {
       return;
