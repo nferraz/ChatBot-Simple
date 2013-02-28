@@ -44,11 +44,11 @@ sub transform {
 }
 
 sub match {
-  my ($str, $pattern) = @_;
+  my ($input, $pattern) = @_;
 
   # regex match
   if (ref $pattern eq 'Regexp') {
-    if ($str =~ $pattern) {
+    if ($input =~ $pattern) {
       my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
       my $i = 0;
       my %result = map { ++$i => $_ } grep { defined $_ } @matches;
@@ -67,7 +67,7 @@ sub match {
   $pattern =~ s{:\S+}{'(.*)'}ge;
 
   # do the pattern matching
-  if ($str =~ m/$pattern/) {
+  if ($input =~ m/$pattern/) {
     my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
     my %result = map { $_ => shift @matches } @named_vars;
     return \%result;
@@ -113,16 +113,16 @@ sub process_transform {
 }
 
 sub process_pattern {
-  my $str = shift;
+  my $input = shift;
 
   for my $pt (@patterns) {
-    my $match = match($str, $pt->{input});
+    my $match = match($input, $pt->{input});
     next if !$match;
 
     my $response;
 
     if ($pt->{code} and ref $pt->{code} eq 'CODE') {
-      $response = $pt->{code}($str,$match);
+      $response = $pt->{code}($input,$match);
     }
 
     $response //= $pt->{output};
@@ -137,13 +137,13 @@ sub process_pattern {
     return $response_interpolated;
   }
 
-  warn "Couldn't find a match for '$str'";
+  warn "Couldn't find a match for '$input'";
   return;
 }
 
 sub process {
-  my $str = shift;
-  my $tr  = process_transform($str);
+  my $input = shift;
+  my $tr  = process_transform($input);
   my $res = process_pattern($tr);
   return $res;
 }
@@ -218,14 +218,14 @@ patterns, and return a response.
   my %mem;
 
   pattern "my name is :name" => sub {
-    my ($str,$param) = @_;
+    my ($input,$param) = @_;
     $mem{name} = $param->{name};
   } => "nice to meet you, :name!";
 
 =head2 Regular expressions
 
   pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
-    my ($str,$param) = @_;
+    my ($input,$param) = @_;
     my ($n1,$op,$n2) = ($param->{1}, $param->{2}, $param->{3});
     # ...
     return $result;
