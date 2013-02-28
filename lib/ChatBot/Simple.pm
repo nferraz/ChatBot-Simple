@@ -101,7 +101,13 @@ sub process_transform {
       warn "Transform code not implemented\n";
     }
     #warn sprintf("Replace '%s' with '%s' in '%s'\n", $tr->{input}, $tr->{output}, $str);
-    $str =~ s/$tr->{input}/$tr->{output}/g;
+    my $input = $tr->{input};
+    my $vars = match($str,$input);
+    if ($vars) {
+      my $input = replace_vars($tr->{input},$vars);
+      $str =~ s/$input/$tr->{output}/g;
+      $str = replace_vars($str,$vars);
+    }
   }
 
   # No transformations found...
