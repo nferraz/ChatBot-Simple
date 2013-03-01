@@ -19,6 +19,10 @@ my @tests = (
     expect => "ok",
   },
   {
+    input => "my name is foo",
+    expect => "I remember that",
+  },
+  {
     input => "what's my name?",
     expect => "your name is foo",
   },
@@ -49,7 +53,7 @@ pattern "my name is :name" => sub {
   my $new_name = $mem{name} = $param->{':name'};
 
   if ($old_name) {
-    return $old_name eq $new_name ? "I know it" : "I thought your name was $old_name";
+    return $old_name eq $new_name ? "I remember that" : "I thought your name was $old_name";
   }
 
   return;
