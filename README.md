@@ -40,8 +40,11 @@ Code execution
 	my %mem;
 
 	pattern "my name is :name" => sub {
-		my ($str,$param);
+		my ($str,$param) = @_;
+
 		$mem{name} = $param->':name';
+
+		return;
 	} => "nice to meet you, :name!";
 
 Multiple named parameters
@@ -50,7 +53,7 @@ Multiple named parameters
 	my %var;
 
 	pattern "define :variable as :value" => sub {
-		my ($str,$param);
+		my ($str,$param) = @_;
 
 		my $variable = $param->{':variable'};
 		my $value    = $param->{':value'};
@@ -65,8 +68,10 @@ Regular expressions
 
 	pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
 		my ($str,$param) = @_;
+
 		my ($n1,$op,$n2) = ($param->{1}, $param->{2}, $param->{3});
 		# ...
+
 		return $result;
 	};
 
