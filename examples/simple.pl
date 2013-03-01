@@ -3,10 +3,13 @@
 use strict;
 use warnings;
 
+use ChatBot::Simple;
+
+# the chatbot knowlege is stored in perl modules:
 use Introduction;
 use Calculator;
 
-use ChatBot::Simple;
+# TODO: use Module::Pluggable to load knowledge automatically
 
 print "> ";
 while (my $input = <>) {
