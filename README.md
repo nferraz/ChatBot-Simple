@@ -1,10 +1,12 @@
 NAME
 ====
 
-ChatBot-Simple - a new and flexible chatbot engine in Perl.
+ChatBot::Simple - a new and flexible chatbot engine in Perl.
 
 DESCRIPTION
 ===========
+
+ChatBot::Simple is a flexible chatbot engine written in Perl.
 
 Instead of specifying the chatbot knowledge base in xml, we are
 going to use the powerful text manipulation capabilities of Perl.
@@ -109,19 +111,14 @@ perldoc command.
 
     perldoc ChatBot::Simple
 
-You can also look for information at:
+Send comments, suggestions and bug reports to:
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=ChatBot-Simple
+https://github.com/nferraz/ChatBot-Simple/issues
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/ChatBot-Simple
+Or fork the code on github:
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/ChatBot-Simple
+https://github.com/nferraz/st
 
-    Search CPAN
-        http://search.cpan.org/dist/ChatBot-Simple/
 
 LICENSE AND COPYRIGHT
 =====================
