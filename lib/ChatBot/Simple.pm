@@ -28,14 +28,14 @@ sub context {
 sub pattern {
     my ( $pattern, @rest ) = @_;
 
-    my @patterns = ref $pattern eq 'ARRAY' ? @{$pattern} : ( $pattern );
+    my @patterns = ref $pattern eq 'ARRAY' ? @{$pattern} : ($pattern);
     my $code     = ref $rest[0] eq 'CODE'  ? shift @rest : undef;
 
     my $response = shift @rest;
 
     $patterns{$__context__} //= [];
 
-    for my $pattern ( @patterns ) {
+    for my $pattern (@patterns) {
         push @{ $patterns{$__context__} },
           {
             pattern  => $pattern,
@@ -48,7 +48,7 @@ sub pattern {
 sub transform {
     my ( $pattern, @rest ) = @_;
 
-    my @patterns = ref $pattern eq 'ARRAY' ? @{$pattern} : ( $pattern);
+    my @patterns = ref $pattern eq 'ARRAY' ? @{$pattern} : ($pattern);
     my $code     = ref $rest[0] eq 'CODE'  ? shift @rest : undef;
 
     my $transform_to = shift @rest;
@@ -146,7 +146,7 @@ sub process_transform {
 sub process_pattern {
     my $input = shift;
 
-    for my $context ('global', $__context__, 'fallback') {
+    for my $context ( 'global', $__context__, 'fallback' ) {
         for my $pt ( @{ $patterns{$context} } ) {
             my $match = match( $input, $pt->{pattern} );
             next if !$match;
