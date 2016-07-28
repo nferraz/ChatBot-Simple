@@ -46,21 +46,23 @@ sub pattern {
 }
 
 sub transform {
-    my (@expr) = @_;
+    my ( $pattern, @rest ) = @_;
 
-    my $transform_to = pop @expr;
+    my @patterns = ref $pattern eq 'ARRAY' ? @{$pattern} : ( $pattern);
+    my $code     = ref $rest[0] eq 'CODE'  ? shift @rest : undef;
 
-    my $code = ref $expr[-1] eq 'CODE' ? pop @expr : undef;
+    my $transform_to = shift @rest;
 
     $transforms{$__context__} //= [];
-    for my $exp (@expr) {
+    for my $pattern (@patterns) {
         push @{ $transforms{$__context__} },
           {
-            pattern   => $exp,
+            pattern   => $pattern,
             transform => $transform_to,
             code      => $code,
           };
     }
+
 }
 
 sub match {

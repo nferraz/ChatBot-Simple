@@ -12,6 +12,9 @@ no warnings 'uninitialized';
 
 {
     context 'name';
+
+    transform [ "i'm :name", "call me :name" ] => 'my name is :name';
+
     pattern "my name is :name" => sub { context 'how_are_you' } => "Hello, :name! How are you?";
 }
 
