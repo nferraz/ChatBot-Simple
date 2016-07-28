@@ -3,7 +3,6 @@ package ChatBot::Simple;
 use strict;
 use warnings;
 use Data::Dumper;
-use Smart::Comments;
 
 our $VERSION = '0.01';
 
