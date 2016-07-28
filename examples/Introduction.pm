@@ -8,10 +8,8 @@ no warnings 'uninitialized';
     context '';
 
     transform 'hello' => 'hi';
-    transform 'goodbye', 'bye-bye', 'sayonara' => 'bye';
 
     pattern 'hi'  => sub { context 'name' } => "hi! what's your name?";
-    pattern 'bye' => 'bye!';
 }
 
 {
@@ -24,6 +22,13 @@ no warnings 'uninitialized';
 
     pattern 'fine'            => "that's great, :name!";
     pattern ':something_else' => 'why do you say that?';
+}
+
+{
+    context 'global';
+
+    transform 'goodbye', 'bye-bye', 'sayonara' => 'bye';
+    pattern 'bye' => 'bye!';
 }
 
 1;

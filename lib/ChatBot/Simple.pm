@@ -141,27 +141,29 @@ sub process_transform {
 sub process_pattern {
     my $input = shift;
 
-    for my $pt ( @{ $patterns{$__context__} } ) {
-        my $match = match( $input, $pt->{pattern} );
-        next if !$match;
+    for my $context ('global', $__context__, 'fallback') {
+        for my $pt ( @{ $patterns{$context} } ) {
+            my $match = match( $input, $pt->{pattern} );
+            next if !$match;
 
-        my $response;
+            my $response;
 
-        if ( $pt->{code} and ref $pt->{code} eq 'CODE' ) {
-            $response = $pt->{code}( $input, $match );
+            if ( $pt->{code} and ref $pt->{code} eq 'CODE' ) {
+                $response = $pt->{code}( $input, $match );
+            }
+
+            $response //= $pt->{response};
+
+            if ( ref $response eq 'ARRAY' ) {
+
+                # deal with multiple responses
+                $response = $response->[ rand( scalar(@$response) ) ];
+            }
+
+            my $response_interpolated = replace_vars( $response, $match );
+
+            return $response_interpolated;
         }
-
-        $response //= $pt->{response};
-
-        if ( ref $response eq 'ARRAY' ) {
-
-            # deal with multiple responses
-            $response = $response->[ rand( scalar(@$response) ) ];
-        }
-
-        my $response_interpolated = replace_vars( $response, $match );
-
-        return $response_interpolated;
     }
 
     warn "Couldn't find a match for '$input' (context = '$__context__')\n";
