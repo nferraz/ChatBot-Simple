@@ -117,7 +117,7 @@ https://github.com/nferraz/ChatBot-Simple/issues
 
 Or fork the code on github:
 
-https://github.com/nferraz/st
+https://github.com/nferraz/ChatBot-Simple
 
 
 LICENSE AND COPYRIGHT
