@@ -3,6 +3,7 @@ package ChatBot::Simple;
 use strict;
 use warnings;
 use Data::Dumper;
+use Smart::Comments;
 
 our $VERSION = '0.01';
 
@@ -84,7 +85,7 @@ sub match {
     $pattern =~ s{:\S+}{'(.*)'}ge;
 
     # do the pattern matching
-    if ( $input =~ m/$pattern/ ) {
+    if ( $input =~ m/^$pattern$/ ) {
         my @matches = ( $1, $2, $3, $4, $5, $6, $7, $8, $9 );
         my %result = map { $_ => shift @matches } @named_vars;
         return \%result;
