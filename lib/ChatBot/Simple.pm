@@ -85,7 +85,7 @@ sub match {
     $pattern =~ s{:\S+}{'(.*)'}ge;
 
     # do the pattern matching
-    if ( $input =~ m/^$pattern$/ ) {
+    if ( $input =~ m/\b$pattern\b/ ) {
         my @matches = ( $1, $2, $3, $4, $5, $6, $7, $8, $9 );
         my %result = map { $_ => shift @matches } @named_vars;
 
