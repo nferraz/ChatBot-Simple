@@ -17,7 +17,7 @@ my %mem;
     pattern 'hi' => sub {
         my ( $input, $param ) = @_;
         if ( !$mem{name} ) {
-            $ChatBot::Simple::__context__ = 'name';
+            context 'name';
             return "hi! what's your name?";
         }
     };
@@ -30,7 +30,7 @@ my %mem;
         my ( $input, $param ) = @_;
         $mem{name} = $param->{':name'};
 
-        $ChatBot::Simple::__context__ = 'how_are_you';
+        context 'how_are_you';
         return "Hello, :name! How are you?";
     };
 
@@ -38,7 +38,7 @@ my %mem;
         my ( $input, $param ) = @_;
         $mem{name} = $param->{':1'};
 
-        $ChatBot::Simple::__context__ = 'how_are_you';
+        context 'how_are_you';
         return "Hello, $mem{name}! How are you?";
       }
 }
