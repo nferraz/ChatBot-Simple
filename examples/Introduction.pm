@@ -46,7 +46,7 @@ my %mem;
 {
     context 'how_are_you';
 
-    pattern 'fine' => "that's great!";
+    pattern 'fine' => "that's great, :name!";
 
     pattern qr{^(\w+)$} => 'why do you say that?';
 }

@@ -15,7 +15,7 @@ our @EXPORT = qw/context pattern transform/;
 
 our $__context__ = '';
 
-my ( %patterns, %transforms );
+my ( %patterns, %transforms, %memory );
 
 sub context {
     my ($context) = @_;
@@ -88,6 +88,10 @@ sub match {
     if ( $input =~ m/^$pattern$/ ) {
         my @matches = ( $1, $2, $3, $4, $5, $6, $7, $8, $9 );
         my %result = map { $_ => shift @matches } @named_vars;
+
+        # override memory with new information
+        %memory = ( %memory, %result );
+
         return \%result;
     }
 
@@ -96,14 +100,17 @@ sub match {
 
 sub replace_vars {
     my ( $pattern, $named_vars ) = @_;
-    for my $var ( keys %$named_vars ) {
+
+    my %vars = ( %memory, %{$named_vars} );
+
+    for my $var ( keys %vars ) {
         next if $var eq '';
 
         # escape regex characters
         my $quoted_var = $var;
         $quoted_var =~ s{([\.\*\+])}{\\$1}g;
 
-        $pattern =~ s{$quoted_var}{$named_vars->{$var}}g;
+        $pattern =~ s{$quoted_var}{$vars{$var}}g;
     }
     return $pattern;
 }
@@ -119,6 +126,7 @@ sub process_transform {
 
         my $input = $tr->{pattern};
         my $vars = match( $str, $input );
+
         if ($vars) {
             my $input = replace_vars( $tr->{pattern}, $vars );
             $str =~ s/$input/$tr->{transform}/g;
