@@ -6,38 +6,49 @@ no warnings 'uninitialized';
 
 my %mem;
 
-transform 'hello' => 'hi';
+{
+    context '';
 
-pattern 'hi' => sub {
-  my ($input, $param) = @_;
-  if (!$mem{name}) {
-    $mem{topic} = 'name';
-    return "hi! what's your name?";
-  }
-  return;
-};
+    transform 'hello' => 'hi';
+    transform 'goodbye', 'bye-bye', 'sayonara' => 'bye';
 
-pattern "my name is :name" => sub {
-  my ($input,$param) = @_;
-  $mem{name} = $param->{':name'};
-  $mem{topic} = 'how_are_you';
-  return "Hello, :name! How are you?";
-};
+    pattern 'bye' => 'bye!';
 
-transform 'goodbye', 'bye-bye', 'sayonara' => 'bye';
+    pattern 'hi' => sub {
+        my ( $input, $param ) = @_;
+        if ( !$mem{name} ) {
+            $ChatBot::Simple::__context__ = 'name';
+            return "hi! what's your name?";
+        }
+    };
+}
 
-pattern 'bye' => 'bye!';
+{
+    context 'name';
 
-pattern 'fine' => 'great!';
+    pattern "my name is :name" => sub {
+        my ( $input, $param ) = @_;
+        $mem{name} = $param->{':name'};
 
-pattern qr{^(\w+)$} => sub {
-  my ($input,$param) = @_;
-  if ($mem{topic} eq 'name') {
-    $mem{name} = $param->{':1'};
-    $mem{topic} = 'how_are_you';
-    return "Hello, $mem{name}! How are you?";
-  }
-  return;
-} => "I don't understand that!";
+        $ChatBot::Simple::__context__ = 'how_are_you';
+        return "Hello, :name! How are you?";
+    };
+
+    pattern qr{^(\w+)$} => sub {
+        my ( $input, $param ) = @_;
+        $mem{name} = $param->{':1'};
+
+        $ChatBot::Simple::__context__ = 'how_are_you';
+        return "Hello, $mem{name}! How are you?";
+      }
+}
+
+{
+    context 'how_are_you';
+
+    pattern 'fine' => "that's great!";
+
+    pattern qr{^(\w+)$} => 'why do you say that?';
+}
 
 1;

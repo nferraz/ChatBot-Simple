@@ -2,6 +2,7 @@ package ChatBot::Simple;
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 our $VERSION = '0.01';
 
@@ -9,151 +10,171 @@ require Exporter;
 
 our @ISA = qw/Exporter/;
 
-our @EXPORT = qw/pattern transform/;
+our @EXPORT = qw/context pattern transform/;
 
-my (@patterns, @transforms);
+our $__context__ = '';
+
+my ( %patterns, %transforms );
+
+sub context {
+    my ($context) = @_;
+
+    $__context__ = $context;
+
+    return;
+}
 
 sub pattern {
-  my ($pattern, @rest) = @_;
+    my ( $pattern, @rest ) = @_;
 
-  my $code = ref $rest[0] eq 'CODE' ? shift @rest : undef;
+    my $code = ref $rest[0] eq 'CODE' ? shift @rest : undef;
 
-  my $response = shift @rest;
+    my $response = shift @rest;
 
-  push @patterns, {
-    pattern  => $pattern,
-    response => $response,
-    code     => $code,
-  };
+    $patterns{$__context__} //= [];
+
+    push @{ $patterns{$__context__} },
+      {
+        pattern  => $pattern,
+        response => $response,
+        code     => $code,
+      };
 }
 
 sub transform {
-  my (@expr) = @_;
+    my (@expr) = @_;
 
-  my $transform_to = pop @expr;
+    my $transform_to = pop @expr;
 
-  my $code = ref $expr[-1] eq 'CODE' ? pop @expr : undef;
+    my $code = ref $expr[-1] eq 'CODE' ? pop @expr : undef;
 
-  for my $exp (@expr) {
-    push @transforms, {
-      pattern   => $exp,
-      transform => $transform_to,
-      code      => $code,
-    };
-  }
+    $transforms{$__context__} //= [];
+    for my $exp (@expr) {
+        push @{ $transforms{$__context__} },
+          {
+            pattern   => $exp,
+            transform => $transform_to,
+            code      => $code,
+          };
+    }
 }
 
 sub match {
-  my ($input, $pattern) = @_;
+    my ( $input, $pattern ) = @_;
 
-  # regex match
-  if (ref $pattern eq 'Regexp') {
-    if ($input =~ $pattern) {
-      my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
-      my $i = 0;
-      my %result = map { ':' . ++$i => $_ } grep { defined $_ } @matches;
-      return \%result;
-    } else {
-      return;
+    # regex match
+    if ( ref $pattern eq 'Regexp' ) {
+        if ( $input =~ $pattern ) {
+            my @matches = ( $1, $2, $3, $4, $5, $6, $7, $8, $9 );
+            my $i       = 0;
+            my %result  = map { ':' . ++$i => $_ } grep { defined $_ } @matches;
+            return \%result;
+        }
+        else {
+            return;
+        }
     }
-  }
 
-  # text pattern (like "my name is :name")
+    # text pattern (like "my name is :name")
 
-  # first, extract the named variables
-  my @named_vars = $pattern =~ m{(:\S+)}g;
+    # first, extract the named variables
+    my @named_vars = $pattern =~ m{(:\S+)}g;
 
-  # transform named variables to '(\S+)'
-  $pattern =~ s{:\S+}{'(.*)'}ge;
+    # transform named variables to '(\S+)'
+    $pattern =~ s{:\S+}{'(.*)'}ge;
 
-  # do the pattern matching
-  if ($input =~ m/$pattern/) {
-    my @matches = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
-    my %result = map { $_ => shift @matches } @named_vars;
-    return \%result;
-  }
+    # do the pattern matching
+    if ( $input =~ m/$pattern/ ) {
+        my @matches = ( $1, $2, $3, $4, $5, $6, $7, $8, $9 );
+        my %result = map { $_ => shift @matches } @named_vars;
+        return \%result;
+    }
 
-  return;
+    return;
 }
 
 sub replace_vars {
-  my ($pattern, $named_vars) = @_;
-  for my $var (keys %$named_vars) {
-    next if $var eq '';
+    my ( $pattern, $named_vars ) = @_;
+    for my $var ( keys %$named_vars ) {
+        next if $var eq '';
 
-    # escape regex characters
-    my $quoted_var = $var;
-    $quoted_var =~ s{([\.\*\+])}{\\$1}g;
+        # escape regex characters
+        my $quoted_var = $var;
+        $quoted_var =~ s{([\.\*\+])}{\\$1}g;
 
-    $pattern =~ s{$quoted_var}{$named_vars->{$var}}g;
-  }
-  return $pattern;
+        $pattern =~ s{$quoted_var}{$named_vars->{$var}}g;
+    }
+    return $pattern;
 }
 
 sub process_transform {
-  my $str = shift;
+    my $str = shift;
 
-  for my $tr (@transforms) {
-    next unless match($str, $tr->{pattern});
-    if (ref $tr->{code} eq 'CODE') {
-      warn "Transform code not implemented\n";
-    }
-    #warn sprintf("Replace '%s' with '%s' in '%s'\n", $tr->{input}, $tr->{output}, $str);
-    my $input = $tr->{pattern};
-    my $vars = match($str,$input);
-    if ($vars) {
-      my $input = replace_vars($tr->{pattern},$vars);
-      $str =~ s/$input/$tr->{transform}/g;
-      $str = replace_vars($str,$vars);
-    }
-  }
+    for my $tr ( @{ $transforms{$__context__} } ) {
+        next unless match( $str, $tr->{pattern} );
+        if ( ref $tr->{code} eq 'CODE' ) {
+            warn "Transform code not implemented\n";
+        }
 
-  # No transformations found...
-  return $str;
+#warn sprintf("Replace '%s' with '%s' in '%s'\n", $tr->{input}, $tr->{output}, $str);
+        my $input = $tr->{pattern};
+        my $vars = match( $str, $input );
+        if ($vars) {
+            my $input = replace_vars( $tr->{pattern}, $vars );
+            $str =~ s/$input/$tr->{transform}/g;
+            $str = replace_vars( $str, $vars );
+        }
+    }
+
+    # No transformations found...
+    return $str;
 }
 
 sub process_pattern {
-  my $input = shift;
+    my $input = shift;
 
-  for my $pt (@patterns) {
-    my $match = match($input, $pt->{pattern});
-    next if !$match;
+    for my $pt ( @{ $patterns{$__context__} } ) {
+        my $match = match( $input, $pt->{pattern} );
+        next if !$match;
 
-    my $response;
+        my $response;
 
-    if ($pt->{code} and ref $pt->{code} eq 'CODE') {
-      $response = $pt->{code}($input,$match);
+        if ( $pt->{code} and ref $pt->{code} eq 'CODE' ) {
+            $response = $pt->{code}( $input, $match );
+        }
+
+        $response //= $pt->{response};
+
+        if ( ref $response eq 'ARRAY' ) {
+
+            # deal with multiple responses
+            $response = $response->[ rand( scalar(@$response) ) ];
+        }
+
+        my $response_interpolated = replace_vars( $response, $match );
+
+        return $response_interpolated;
     }
 
-    $response //= $pt->{response};
+    warn "Couldn't find a match for '$input' (context = '$__context__')\n";
+    warn Dumper $patterns{$__context__};
 
-    if (ref $response eq 'ARRAY') {
-      # deal with multiple responses
-      $response = $response->[ rand(scalar(@$response)) ];
-    }
-
-    my $response_interpolated = replace_vars($response, $match);
-
-    return $response_interpolated;
-  }
-
-  warn "Couldn't find a match for '$input'";
-  return;
+    return '';
 }
 
 sub process {
-  my $input = shift;
-  my $tr  = process_transform($input);
-  my $res = process_pattern($tr);
-  return $res;
+    my $input = shift;
+    my $tr    = process_transform($input);
+    my $res   = process_pattern($tr);
+    return $res;
 }
 
 sub patterns {
-  return \@patterns;
+    return \@{ $patterns{$__context__} };
 }
 
 sub transforms {
-  return \@transforms;
+    return \@{ $transforms{$__context__} };
 }
 
 1;
