@@ -116,7 +116,6 @@ sub process_transform {
             warn "Transform code not implemented\n";
         }
 
-#warn sprintf("Replace '%s' with '%s' in '%s'\n", $tr->{input}, $tr->{output}, $str);
         my $input = $tr->{pattern};
         my $vars = match( $str, $input );
         if ($vars) {
