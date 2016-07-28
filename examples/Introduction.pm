@@ -7,9 +7,7 @@ no warnings 'uninitialized';
 {
     context '';
 
-    transform 'hello' => 'hi';
-
-    pattern 'hi'  => sub { context 'name' } => "hi! what's your name?";
+    pattern [ 'hi', 'hello' ]  => sub { context 'name' } => "hi! what's your name?";
 }
 
 {

@@ -28,18 +28,21 @@ sub context {
 sub pattern {
     my ( $pattern, @rest ) = @_;
 
-    my $code = ref $rest[0] eq 'CODE' ? shift @rest : undef;
+    my @patterns = ref $pattern eq 'ARRAY' ? @{$pattern} : ( $pattern );
+    my $code     = ref $rest[0] eq 'CODE'  ? shift @rest : undef;
 
     my $response = shift @rest;
 
     $patterns{$__context__} //= [];
 
-    push @{ $patterns{$__context__} },
-      {
-        pattern  => $pattern,
-        response => $response,
-        code     => $code,
-      };
+    for my $pattern ( @patterns ) {
+        push @{ $patterns{$__context__} },
+          {
+            pattern  => $pattern,
+            response => $response,
+            code     => $code,
+          };
+    }
 }
 
 sub transform {
