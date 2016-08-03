@@ -44,12 +44,12 @@ Named parameters
 Code execution
 --------------
 
-	my %mem;
-
 	pattern "my name is :name" => sub {
 		my ($str,$param) = @_;
 
-		$mem{name} = $param->':name';
+        if ( $param->{':name'} eq 'nobody' ) {
+            return 'No, really... what is your name?';
+        }
 
 		return;
 	} => "nice to meet you, :name!";
