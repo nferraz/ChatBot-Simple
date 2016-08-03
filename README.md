@@ -26,6 +26,11 @@ Simple pattern/responses
 
 	pattern 'hello' => 'hi!';
 
+Multiple patterns
+-----------------
+
+    pattern [ 'hi', 'hello' ] => 'hi!';
+
 Multiple (random) responses
 ---------------------------
 
