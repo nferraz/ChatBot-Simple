@@ -84,10 +84,6 @@ before the pattern matching:
 	transform "you're" => "you are";
 	transform "what's" => "what is";
 
-They can use parameters as well:
-
-	transform "I am called :name" => "my name is :name";
-
 (See more examples in the "t/" directory.)
 
 INSTALLATION
