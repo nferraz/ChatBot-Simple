@@ -41,21 +41,13 @@ Named parameters
 
 	pattern "my name is :name" => "hello, :name!";
 
-Code execution
---------------
-
-	pattern "my name is :name" => sub {
-		my ($str,$param) = @_;
-
-        if ( $param->{':name'} eq 'nobody' ) {
-            return 'No, really... what is your name?';
-        }
-
-		return;
-	} => "nice to meet you, :name!";
-
 Multiple named parameters
 -------------------------
+
+    pattern "i like :this and :that" => "i also like :this, but I don't like :that";
+
+Code execution
+--------------
 
 	my %var;
 
