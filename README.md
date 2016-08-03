@@ -84,6 +84,19 @@ before the pattern matching:
 	transform "you're" => "you are";
 	transform "what's" => "what is";
 
+Contexts
+--------
+
+    {
+        context ''; # initial context
+        pattern [ 'hi', 'hello' ] => "hi! what's your name?";
+    }
+
+    {
+        context 'introduction';
+        pattern 'my name is :name' => 'how are you doing, :name?';
+    }
+
 (See more examples in the "t/" directory.)
 
 INSTALLATION
