@@ -203,16 +203,18 @@ ChatBot::Simple - new and flexible chatbot engine in Perl
 
   use ChatBot::Simple;
 
-  # simple pattern/response
-  pattern 'hello' => 'hi!';
-  pattern "what is your name?" => "my name is ChatBot::Simple";
+  # simple pattern/responses
+  pattern 'hello'              => 'hi!';
+  pattern 'what is your name?' => 'my name is ChatBot::Simple';
+  pattern 'my name is :name'   => 'hello, :name! how do you do?';
 
   # simple transformations
   transform "what's" => "what is";
 
   # simple responses
-  process("hello");
-  process("what's your name?");
+  process("hello");             # -> 'hi!'
+  process("what's your name?"); # -> 'my name is ChatBot::Simple'
+  process("my name is foo");    # -> 'hello, foo! how do you do?'
 
   # and much more!
 
@@ -220,72 +222,88 @@ ChatBot::Simple - new and flexible chatbot engine in Perl
 
 ChatBot::Simple is a new and flexible chatbot engine in Perl.
 
-Instead of specifying the chatbot knowledge base in xml, we are
-going to use the powerful text manipulation capabilities of Perl.
-
 =head1 METHODS
 
 =head2 pattern
 
-pattern is used to register response patterns:
+Use C<pattern> to declare input patterns and responses:
 
-  pattern 'hello' => 'hi!';
+    pattern 'hello'         => 'hi!';
+    pattern ['hello', 'hi'] => ['hello', 'hi', 'how are you doing?']
+
+    # named variables
+    pattern 'my name is :name' => 'hello, :name!';
+
+    # regular expressions with captured variables
+    pattern qr{good (morning|afternoon|night)} => 'good :1, :name!';
+
+    # perl code
+    pattern 'what is :n1 times :n2' => sub {
+        my ($input, $param) = @_;
+        my ($n1, $n2) = ($param->{n1}, $param->{n2});
+        if ($n1 <= 10 and $n2 <= 10) {
+            my $answer = $param->{n1} + $param->{n2};
+            return "the answer is $answer!";
+        }
+        return;
+    } => "sorry, I only know how to multiply up to 10";
+
+Use a catch-all variable to deal with unrecognized patterns:
+
+    pattern ':something_else' => "sorry, I don't understand that";
+
 
 =head2 transform
 
-transform is used to register text normalizations:
+Use <transform> for simple normalization:
 
-  transform "what's" => "what is";
+    transform "isn't"  => "is not";
+    transform "aren't" => "are not";
+    transform "what's" => "what is";
 
-Like C<pattern>, you can use named variables and code:
 
-  transform "I am called :name" => "my name is :name";
+=head2 context
 
-  transform "foo" => sub {
-    # ...
-  } => "bar";
+Use C<context> to isolate patterns that could have different meanings
+according to the context where they appear. Examples:
 
-Differently from C<pattern>, you can specify multiple transformations
-at once:
+    {
+        context 'do you like x?';
 
-  transform "goodbye", "byebye", "hasta la vista", "sayonara" => "bye";
+        pattern 'yes' => 'I like it too';
+        pattern 'no'  => 'why not?';
+    }
+
+    {
+        context 'have you ever x?';
+
+        pattern 'yes' => 'tell me more about that!';
+        pattern 'no'  => 'would you like to?';
+    }
+
+
+Use the C<"global"> context to register patterns and transformations
+that should be applied in all contexts:
+
+    {
+        context "global";
+
+        pattern 'tell me a joke' => 'knock, knock';
+    }
+
 
 =head2 process
 
-process will read a sentence, apply all the possible transforms and
-patterns, and return a response.
+C<process(str)> will apply all the possible transformations and patterns,
+and return a valid response according to the context:
 
-=head1 FEATURES
+    while (<>) {
+        my $chatbot_response = process($_);
+        print "$chatbot_response\n";
+    }
 
-=head2 Multiple (random) responses:
+(See more examples in the C<examples/> and C<t/> directories)
 
-  pattern 'hello' => [ 'hi!', 'hello!', 'what\'s up?' ];
-
-=head2 Named variables
-
-  pattern "my name is :name" => "hello, :name!";
-
-=head2 Code execution
-
-  my %mem;
-
-  pattern "my name is :name" => sub {
-    my ($input,$param) = @_;
-    $mem{name} = $param->{name};
-  } => "nice to meet you, :name!";
-
-=head2 Regular expressions
-
-  pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
-    my ($input,$param) = @_;
-    my ($n1,$op,$n2) = ($param->{1}, $param->{2}, $param->{3});
-    # ...
-    return $result;
-  };
-
-(See more examples in the C<t/> directory)
-
-=head1 METHODS
 
 =head1 LICENSE AND COPYRIGHT
 
