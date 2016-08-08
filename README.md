@@ -1,7 +1,7 @@
 NAME
 ====
 
-ChatBot::Simple - a new and flexible chatbot engine in Perl.
+ChatBot::Simple - new and flexible chatbot engine in Perl
 
 DESCRIPTION
 ===========
@@ -21,83 +21,97 @@ difficult things possible.
 FEATURES
 ========
 
-Simple pattern/responses
-------------------------
+pattern
+-------
 
-	pattern 'hello' => 'hi!';
+Use "pattern" to declare input patterns and responses:
 
-Multiple patterns
------------------
+    pattern 'hello'         => 'hi!';
 
-    pattern [ 'hi', 'hello' ] => 'hi!';
+### Multiple patterns and responses:
 
-Multiple (random) responses
----------------------------
+    pattern ['hello', 'hi'] => ['hello', 'hi', 'how are you doing?']
 
-	pattern 'hello' => [ 'hi!', 'hello!', 'wazzzzup!' ];
+### Named variables
 
-Named parameters
-----------------
+    pattern 'my name is :name' => 'hello, :name!';
 
-	pattern "my name is :name" => "hello, :name!";
+### Regular expressions with captured variables
 
-Multiple named parameters
--------------------------
+    pattern qr{good (morning|afternoon|night)} => 'good :1, :name!';
 
-    pattern "i like :this and :that" => "i also like :this, but I don't like :that";
+### Perl code
 
-Code execution
---------------
+    pattern 'what is :n1 times :n2' => sub {
+        my ($input, $param) = @_;
+        my ($n1, $n2) = ($param->{n1}, $param->{n2});
+        if ($n1 <= 10 and $n2 <= 10) {
+            my $answer = $param->{n1} + $param->{n2};
+            return "the answer is $answer!";
+        }
+        return;
+    } => "sorry, I only know how to multiply up to 10";
 
-	my %var;
+### Unrecognized patterns
 
-	pattern "define :variable as :value" => sub {
-		my ($str,$param) = @_;
+When everything fails, you can use a catch-all variable to deal
+with unrecognized patterns:
 
-		my $variable = $param->{':variable'};
-		my $value    = $param->{':value'};
+    pattern ':something_else' => "sorry, I don't understand that";
 
-		$var{$variable} = $value;
 
-		return;
-	} => 'ok';
+transform
+---------
 
-Regular expressions
--------------------
+Use "transform" for simple normalization:
 
-	pattern qr{what is (\d+) ([+-/*]) (\d+)} => sub {
-		my ($str,$param) = @_;
+    transform "isn't"  => "is not";
+    transform "aren't" => "are not";
+    transform "what's" => "what is";
 
-		my ($n1,$op,$n2) = ($param->{1}, $param->{2}, $param->{3});
-		# ...
+context
+-------
 
-		return $result;
-	};
-
-Transformations
----------------
-
-Transformations can be used to normalize input, and are performed
-before the pattern matching:
-
-	transform "I'm"    => "I am"
-	transform "you're" => "you are";
-	transform "what's" => "what is";
-
-Contexts
---------
+Use "context" to isolate patterns that could have different meanings
+according to the context where they appear. Examples:
 
     {
-        context ''; # initial context
-        pattern [ 'hi', 'hello' ] => "hi! what's your name?";
+        context 'do you like x?';
+
+        pattern 'yes' => 'I like it too';
+        pattern 'no'  => 'why not?';
     }
 
     {
-        context 'introduction';
-        pattern 'my name is :name' => 'how are you doing, :name?';
+        context 'have you ever x?';
+
+        pattern 'yes' => 'tell me more about that!';
+        pattern 'no'  => 'would you like to?';
     }
 
-(See more examples in the "t/" directory.)
+Use the "global" context to register patterns and transformations that
+should be applied in all contexts:
+
+    {
+        context "global";
+
+        pattern 'tell me a joke' => 'knock, knock';
+    }
+
+process
+-------
+
+"process(str)" will apply all the possible transformations and
+patterns, and return a valid response according to the context:
+
+    while (<>) {
+        chomp;
+        my $chatbot_response = process($_);
+        print "$chatbot_response\n";
+    }
+
+(See more examples in the "examples/" and "t/" directories)
+
 
 INSTALLATION
 ============
@@ -129,7 +143,7 @@ https://github.com/nferraz/ChatBot-Simple
 LICENSE AND COPYRIGHT
 =====================
 
-Copyright (C) 2013 Nelson Ferraz
+Copyright (C) 2013, 2014, 2015, 2016 Nelson Ferraz
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
