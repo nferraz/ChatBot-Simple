@@ -31,9 +31,14 @@ Use "pattern" to declare input patterns and responses:
     pattern 'hello' => 'hi!';
 
 
-### Multiple patterns and responses:
+### Multiple patterns
 
-    pattern ['hello', 'hi'] => ['hello', 'hi', 'how are you doing?']
+    pattern ['hello', 'hi'] => 'hi!';
+
+
+### Multiple (random) responses
+
+    pattern ['hello', 'hi'] => ['hello', 'hi', 'how are you doing?'];
 
 
 ### Named variables
