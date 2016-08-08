@@ -3,6 +3,7 @@ NAME
 
 ChatBot::Simple - new and flexible chatbot engine in Perl
 
+
 DESCRIPTION
 ===========
 
@@ -18,6 +19,7 @@ you start adding features, they quickly become unmanageable.
 ChatBot::Simple's design goal is to make easy things easy, and
 difficult things possible.
 
+
 FEATURES
 ========
 
@@ -26,19 +28,23 @@ pattern
 
 Use "pattern" to declare input patterns and responses:
 
-    pattern 'hello'         => 'hi!';
+    pattern 'hello' => 'hi!';
+
 
 ### Multiple patterns and responses:
 
     pattern ['hello', 'hi'] => ['hello', 'hi', 'how are you doing?']
 
+
 ### Named variables
 
     pattern 'my name is :name' => 'hello, :name!';
 
+
 ### Regular expressions with captured variables
 
     pattern qr{good (morning|afternoon|night)} => 'good :1, :name!';
+
 
 ### Perl code
 
@@ -69,6 +75,7 @@ Use "transform" for simple normalization:
     transform "aren't" => "are not";
     transform "what's" => "what is";
 
+
 context
 -------
 
@@ -98,6 +105,7 @@ should be applied in all contexts:
         pattern 'tell me a joke' => 'knock, knock';
     }
 
+
 process
 -------
 
@@ -122,6 +130,7 @@ To install this module, run the following commands:
 	make
 	make test
 	make install
+
 
 SUPPORT AND DOCUMENTATION
 =========================
