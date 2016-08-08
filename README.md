@@ -45,6 +45,8 @@ Use "pattern" to declare input patterns and responses:
 
     pattern 'my name is :name' => 'hello, :name!';
 
+Once defined, named variables can be used at any point later during
+conversation.
 
 ### Regular expressions with captured variables
 
